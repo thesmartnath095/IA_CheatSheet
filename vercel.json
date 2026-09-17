@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/feuille-synthese.html" }
+  ]
+}
