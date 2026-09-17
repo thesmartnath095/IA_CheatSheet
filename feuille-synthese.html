@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feuilles-synthèses — IA 420-565-MT</title>
+<meta name="description" content="Aide-mémoire du cours Intelligence artificielle (420-565-MT) : Foules & Gradients, Algos génétiques, Agents & états, Neural net.">
+
+<!--
+  SOURCES DES RÈGLES :
+    https://intelligence.projet.autos/feuille-synthese/
+    https://intelligence.projet.autos/labo-evolutif/
+  4 sujets, gardés comme sections de cette page :
+    FOULES & GRADIENTS (2%) · ALGOS GÉNÉTIQUES (2%) · AGENTS & ÉTATS (2%) · NEURAL NET (4%)
+  Page hébergée sur Vercel : pas de contrainte de format imprimable ici,
+  seulement la structure en 4 sections par sujet.
+
+  MISE À JOUR : cette page grandit avec la session.
+    - Foules & Gradients : La Montagne, Boids
+    - Algos génétiques : Identicon évolué (pixel_main.py), Musicolab
+      (remise semaine 6, au plus tard le 30 septembre)
+  Les sections des sujets non vus restent en "à venir".
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --papier:#fbfbf8;
+    --panneau:#ffffff;
+    --encre:#1e2430;
+    --encre-douce:#5b6472;
+    --trait:#dfe1da;
+
+    --gradients:#b1592c;
+    --foules:#1f7a6c;
+    --genetique:#6a4c93;
+    --agents:#2f6690;
+    --neurones:#c1443c;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:var(--papier);
+    color:var(--encre);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+  }
+
+  code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.88em;
+    background:rgba(30,36,48,0.07);
+    padding:0.05em 0.35em;
+    border-radius:3px;
+  }
+
+  a{ color:inherit; }
+
+  /* ---------- nav ---------- */
+  nav.barre{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; gap:clamp(10px,2vw,22px);
+    flex-wrap:wrap;
+    padding:12px clamp(16px,4vw,40px);
+    background:var(--encre);
+    color:var(--papier);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+  }
+  nav.barre .titre-nav{ font-weight:700; margin-right:auto; letter-spacing:0.2px; }
+  nav.barre a{ text-decoration:none; color:rgba(251,251,248,0.75); white-space:nowrap; }
+  nav.barre a:hover{ color:#fff; }
+  nav.barre a.point-gradients{ border-bottom:2px solid var(--gradients); }
+  nav.barre a.point-genetique{ border-bottom:2px solid var(--genetique); }
+  nav.barre a.point-agents{ border-bottom:2px solid var(--agents); }
+  nav.barre a.point-neurones{ border-bottom:2px solid var(--neurones); }
+
+  /* ---------- en-tête ---------- */
+  header.hero{
+    padding:clamp(28px,6vw,56px) clamp(16px,4vw,40px) clamp(18px,3vw,28px);
+    max-width:980px;
+    margin:0 auto;
+  }
+  header.hero .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--encre-douce);
+    margin-bottom:10px;
+  }
+  header.hero h1{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(24px,4vw,34px);
+    margin:0 0 10px;
+    line-height:1.25;
+  }
+  header.hero p{
+    max-width:640px;
+    color:var(--encre-douce);
+    font-size:15px;
+  }
+
+  main{ max-width:980px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 80px; }
+
+  /* ---------- sections ---------- */
+  section.sujet{
+    padding:36px 0;
+    border-top:1px solid var(--trait);
+    scroll-margin-top:64px;
+  }
+  section.sujet:first-of-type{ border-top:none; }
+
+  .entete-sujet{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:8px 20px;
+    margin-bottom:20px;
+  }
+  .entete-sujet h2{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(18px,2.6vw,22px);
+    margin:0;
+    display:flex; align-items:center; gap:9px;
+  }
+  .puce-sujet{ width:11px; height:11px; flex:none; display:inline-block; }
+  .entete-sujet .meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--encre-douce);
+    text-align:right;
+    line-height:1.5;
+  }
+
+  .grille-cartes{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+    gap:14px;
+  }
+
+  .carte{
+    background:var(--panneau);
+    border:1px solid var(--trait);
+    border-left-width:4px;
+    padding:14px 16px 16px;
+    font-size:14px;
+  }
+  .carte h3{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13.5px;
+    font-weight:600;
+    margin:0 0 8px;
+  }
+  .carte ul{ margin:0; padding-left:18px; }
+  .carte li{ margin-bottom:5px; }
+  .carte li:last-child{ margin-bottom:0; }
+  .carte .source{
+    display:block;
+    margin-top:8px;
+    font-size:11.5px;
+    color:var(--encre-douce);
+    font-style:italic;
+  }
+
+  .accent-gradients{ border-left-color:var(--gradients); }
+  .accent-foules{ border-left-color:var(--foules); }
+  .accent-genetique{ border-left-color:var(--genetique); }
+  .accent-agents{ border-left-color:var(--agents); }
+  .accent-neurones{ border-left-color:var(--neurones); }
+
+  .legende-couleurs{
+    display:flex; gap:18px; flex-wrap:wrap;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--encre-douce);
+    margin-bottom:18px;
+  }
+  .legende-couleurs .item{ display:flex; align-items:center; gap:6px; }
+  .legende-couleurs .puce{ width:9px; height:9px; flex:none; display:inline-block; }
+
+  /* ---------- section à venir ---------- */
+  .a-venir{
+    border:1px dashed var(--trait);
+    border-left:4px dashed var(--encre-douce);
+    padding:26px 20px;
+    color:var(--encre-douce);
+    font-size:14px;
+  }
+  .a-venir strong{ color:var(--encre); }
+
+  footer{
+    max-width:980px;
+    margin:0 auto;
+    padding:24px clamp(16px,4vw,40px) 60px;
+    font-size:12px;
+    color:var(--encre-douce);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  footer a{ text-decoration:underline; text-underline-offset:2px; }
+
+  @media print{
+    nav.barre{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="barre">
+  <span class="titre-nav">IA 420-565-MT</span>
+  <a class="point-gradients" href="#foules-gradients">Foules &amp; Gradients</a>
+  <a class="point-genetique" href="#genetique">Algos génétiques</a>
+  <a class="point-agents" href="#agents">Agents &amp; états</a>
+  <a class="point-neurones" href="#neural">Neural net</a>
+</nav>
+
+<header class="hero">
+  <div class="kicker">Feuilles-synthèses · aide-mémoire de session</div>
+  <h1>Intelligence artificielle — 420-565-MT</h1>
+  <p>Condensé des labos faits en classe, un sujet par section. Cette page grandit au fil de la session.</p>
+</header>
+
+<main>
+
+  <!-- ============================================================ -->
+  <!-- FOULES & GRADIENTS — La Montagne + Boids                      -->
+  <!-- ============================================================ -->
+  <section class="sujet" id="foules-gradients">
+    <div class="entete-sujet">
+      <h2><span class="puce-sujet" style="background:var(--gradients)"></span>Foules &amp; Gradients</h2>
+      <div class="meta">2 % de la session<br>Labos : La Montagne · Essaim (Boids)</div>
+    </div>
+
+    <div class="legende-couleurs">
+      <span class="item"><span class="puce" style="background:var(--gradients)"></span>Gradients — La Montagne</span>
+      <span class="item"><span class="puce" style="background:var(--foules)"></span>Foules — Boids</span>
+    </div>
+
+    <div class="grille-cartes">
+
+      <div class="carte accent-gradients">
+        <h3>La Montagne — objectif</h3>
+        <ul>
+          <li>But : trouver le minimum d'une courbe.</li>
+          <li><code>calculerPoint(x)</code> retourne l'altitude au point x.</li>
+          <li>La courbe a au moins deux creux (minimums locaux).</li>
+          <li>Le <code>Skieur</code> explore la courbe un pas à la fois.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-gradients">
+        <h3>V0 — recherche systématique</h3>
+        <ul>
+          <li>Teste tous les points de la courbe, un par un.</li>
+          <li>Garde <code>minX</code> et <code>minY</code> : le point le plus bas vu.</li>
+          <li>Trouve toujours le vrai minimum global.</li>
+          <li>Coûteux sur une très grande courbe.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-gradients">
+        <h3>V1 / V2 — descente locale</h3>
+        <ul>
+          <li>V1 : le Skieur s'arrête au premier creux trouvé.</li>
+          <li>V2 : le Skieur tolère une petite remontée avant d'arrêter.</li>
+          <li>Compteur <code>remontees</code> : compte les pas qui montent d'affilée.</li>
+          <li>Risque : rester coincé dans un creux qui n'est pas le vrai minimum.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-gradients">
+        <h3>V3 / V4 — recuit simulé</h3>
+        <ul>
+          <li>Le hasard remplace le pas fixe vers la droite.</li>
+          <li><code>temperature</code> démarre à 500, baisse à chaque frame.</li>
+          <li>Température haute → grands sauts aléatoires (exploration).</li>
+          <li>Le refroidissement avance toujours, que le Skieur monte ou descende.</li>
+          <li class="source">Détail des 4 versions : diaporama « Simulated annealing »</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-gradients">
+        <h3>Pièges rencontrés — La Montagne</h3>
+        <ul>
+          <li><code>const</code> bloque une variable pour toujours ; modifier <code>TOLERANCE</code> ne fait rien.</li>
+          <li>Un calcul sans <code>=</code> ne range son résultat nulle part.</li>
+          <li><code>Math.random()</code> s'écrit en minuscule, pas <code>Math.Random()</code>.</li>
+          <li>Un saut aléatoire a besoin d'une borne des deux côtés.</li>
+          <li>Une accolade manquante change la portée d'un <code>if</code>.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-foules">
+        <h3>Boids — les 3 règles de Reynolds</h3>
+        <ul>
+          <li><b>Alignement</b> : viser la vitesse moyenne des voisins.</li>
+          <li><b>Cohésion</b> : viser le centre du groupe de voisins.</li>
+          <li><b>Séparation</b> : s'éloigner des voisins trop proches.</li>
+          <li class="source">Référence : github.com/cubedhuang/boids — js/boid.js</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-foules">
+        <h3>Boids — patron de calcul d'une force</h3>
+        <ul>
+          <li><code>setMag()</code> fixe l'intensité de la force désirée.</li>
+          <li><code>sub()</code> soustrait la vitesse actuelle du Boid.</li>
+          <li><code>max()</code> limite la force finale.</li>
+          <li>Fonctions séparées : <code>calculerAlignement()</code>, <code>calculerCohesion()</code>, <code>calculerSeparation()</code>.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-foules">
+        <h3>Pièges rencontrés — Boids</h3>
+        <ul>
+          <li><code>dist()</code> prend ses arguments dans un ordre précis.</li>
+          <li>Une fonction qui retourne une valeur : toujours l'assigner.</li>
+          <li><code>.add()</code> change l'objet de gauche, pas l'argument passé.</li>
+          <li>Diviser un <code>p5.Vector</code> : utiliser <code>.div()</code>, jamais <code>/</code>.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ALGOS GÉNÉTIQUES — Identicon évolué + Musicolab                -->
+  <!-- ============================================================ -->
+  <section class="sujet" id="genetique">
+    <div class="entete-sujet">
+      <h2><span class="puce-sujet" style="background:var(--genetique)"></span>Algos génétiques</h2>
+      <div class="meta">2 % de la session<br>Labos : Identicon évolué · Musicolab<br>Remise : semaine 6 (30 sept.)</div>
+    </div>
+
+    <div class="grille-cartes">
+
+      <div class="carte accent-genetique">
+        <h3>La boucle d'un algo génétique</h3>
+        <ul>
+          <li>Une seule boucle, réutilisée sur tous les terrains.</li>
+          <li>Population → fitness → sélection → crossover → mutation → on répète.</li>
+          <li>Ici, deux terrains différents : des identicons (images) et de la musique (notes).</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Représenter un individu (le génome)</h3>
+        <ul>
+          <li>Identicon : une matrice de pixels, remplie de carrés symétriques par <code>genererMatriceDeCarres()</code>.</li>
+          <li>Musique : deux listes séparées. <code>notes</code> contient des valeurs MIDI. <code>durees</code> contient des durées.</li>
+          <li>Une population est une liste d'individus : <code>genererPopulationIdenticons()</code>, <code>genpopuchanson()</code>.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Fitness — sélection humaine</h3>
+        <ul>
+          <li><code>calculerFitness()</code> affiche un identicon, puis lit une note de 0 à 100 avec <code>input()</code>.</li>
+          <li><code>selectionnerChampions()</code> parcourt la génération et garde les 2 meilleures notes.</li>
+          <li>Les deux champions gardés deviennent les parents de la prochaine génération.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Crossover</h3>
+        <ul>
+          <li><code>crossover()</code> échange une moitié de la matrice de pixels entre deux parents.</li>
+          <li>Découpage NumPy utilisé : <code>parent[x1:x2, y1:y2]</code>.</li>
+          <li>Chaque enfant garde une partie de chaque parent.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Mutation</h3>
+        <ul>
+          <li><code>mutation()</code> choisit un pixel au hasard et lui donne une couleur aléatoire.</li>
+          <li><code>TAUX_DE_MUTATION</code> fixe la probabilité qu'un enfant soit muté (ex. 0.3).</li>
+          <li>Une mutation reste petite : un seul pixel, pas toute l'image.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Représentation musicale (MIDI)</h3>
+        <ul>
+          <li>Un nombre MIDI représente une touche de piano. Le do central vaut 60.</li>
+          <li><code>mai.make_music(notes, durees)</code> transforme les listes en son.</li>
+          <li><code>generermusic()</code> pige les notes dans une <code>GAMME</code> fixe : la mélodie reste dans le ton.</li>
+          <li><code>pgm=</code> choisit l'instrument. <code>is_drum=True</code> joue des percussions.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- AGENTS & ÉTATS — à venir                                       -->
+  <!-- ============================================================ -->
+  <section class="sujet" id="agents">
+    <div class="entete-sujet">
+      <h2><span class="puce-sujet" style="background:var(--agents)"></span>Agents &amp; états</h2>
+      <div class="meta">2 % de la session</div>
+    </div>
+    <div class="a-venir">
+      <strong>Pas encore vu en classe.</strong> Cette section se remplit après le labo sur les agents et les machines à états.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- NEURAL NET — à venir                                           -->
+  <!-- ============================================================ -->
+  <section class="sujet" id="neural">
+    <div class="entete-sujet">
+      <h2><span class="puce-sujet" style="background:var(--neurones)"></span>Neural net</h2>
+      <div class="meta">4 % de la session</div>
+    </div>
+    <div class="a-venir">
+      <strong>Pas encore vu en classe.</strong> Cette section se remplit après le labo de réseaux de neurones.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Règles du cours : <a href="https://intelligence.projet.autos/feuille-synthese/" target="_blank" rel="noopener">feuilles-synthèses</a> ·
+  <a href="https://intelligence.projet.autos/labo-evolutif/" target="_blank" rel="noopener">laboratoires évolutif</a>
+</footer>
+
+</body>
+</html>
