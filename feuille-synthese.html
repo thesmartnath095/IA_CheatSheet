@@ -394,6 +394,69 @@
         </ul>
       </div>
 
+      <div class="carte accent-genetique">
+        <h3>mai — import et affichage</h3>
+        <ul>
+          <li>Alias <code>matplotlib.pyplot</code> : <code>import matplotlib.pyplot as afficheur</code>.</li>
+          <li>Chaque appel a besoin du préfixe <code>afficheur.</code> : <code>afficheur.figure()</code>, <code>afficheur.plot()</code>, <code>afficheur.show()</code>.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>mai — fonctions principales</h3>
+        <ul>
+          <li><code>mai.make_music(notes, durs=durees, pgm=0)</code> joue la musique.</li>
+          <li><code>mai.make_music_plot(notes, durs=durees, pgm=0)</code> l'affiche en piano roll.</li>
+          <li><code>notes</code> et <code>durs</code> : deux listes de même longueur, appariées dans l'ordre.</li>
+          <li><code>durs=</code> s'écrit toujours en mot-clé, jamais en position.</li>
+          <li><code>is_drum=True</code> joue en percussion et remplace <code>pgm</code>.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Hauteur (pitch) MIDI</h3>
+        <ul>
+          <li>Un entier MIDI donne une note précise. <code>60</code> = do central.</li>
+          <li>Un nombre décimal donne un microton, entre deux touches adjacentes (ex. <code>60.5</code> entre do et do#).</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Instrument (pgm)</h3>
+        <ul>
+          <li>La table General MIDI numérote les instruments de 1 à 128.</li>
+          <li>Le paramètre <code>pgm</code> attend une valeur de 0 à 127.</li>
+          <li>Toujours soustraire 1 au numéro de la table.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Module random</h3>
+        <ul>
+          <li><code>random.randint(30, 90)</code> retourne un entier.</li>
+          <li><code>random.uniform(30, 90)</code> retourne un décimal.</li>
+          <li><code>random.random()</code> retourne un décimal entre 0 et 1.</li>
+          <li><code>random</code> seul n'est pas une fonction : il faut toujours <code>random.&lt;fonction&gt;()</code>.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Sinusoïde centrée</h3>
+        <ul>
+          <li>Patron : <code>centre + amplitude * math.sin(x * vitesse)</code>.</li>
+          <li><code>math.sin()</code> oscille entre -1 et 1.</li>
+          <li>Une <code>vitesse</code> inférieure à 1 ralentit l'oscillation.</li>
+        </ul>
+      </div>
+
+      <div class="carte accent-genetique">
+        <h3>Piège — longueur des listes</h3>
+        <ul>
+          <li><code>notes</code> et <code>durees</code> doivent toujours avoir la même longueur.</li>
+          <li>Une liste plus courte tronque l'autre liste en silence, sans erreur.</li>
+        </ul>
+      </div>
+
     </div>
   </section>
 
